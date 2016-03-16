@@ -18,7 +18,9 @@ class EDWordModel: NSObject {
     required init(data : NSDictionary) {
         self.title = (data[""]?.string)!
         self.urlAudioUK = NSURL(string: (data[""]?.string)!)!
-//        self.number = number
-//        self.scale = scale
+        self.urlAudioUS = NSURL(string: (data[""]?.string)!)!
+        //        self.number = number
+        //        self.scale = scale
+        self.type = ""
     }
 }
