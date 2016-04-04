@@ -11,19 +11,19 @@ import Alamofire
 import HTMLReader
 class EDDictionaryManager: NSObject {
     
-//    +(instancetype)shareInstance{
-//    static DatabaseManager *_shareObject = nil;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//    _shareObject = [[self alloc] init];
-//    });
-//    return _shareObject;
-//    }
+    //    +(instancetype)shareInstance{
+    //    static DatabaseManager *_shareObject = nil;
+    //    static dispatch_once_t onceToken;
+    //    dispatch_once(&onceToken, ^{
+    //    _shareObject = [[self alloc] init];
+    //    });
+    //    return _shareObject;
+    //    }
     
     
-     static let sharedInstance = EDDictionaryManager()
+    static let sharedInstance = EDDictionaryManager()
     
-    func lookUpWord(word: String,completionHandler: (result: NSDictionary?,error: NSError?) -> Void) {
+    func lookUpWord(word: String,completionHandler: (result: Dictionary<String, Any>?,error: NSError?) -> Void) {
         let URLString = "http://www.oxfordlearnersdictionaries.com/definition/english/\(word)"
         Alamofire.request(.GET, URLString)
             .responseString { responseString in
@@ -39,40 +39,66 @@ class EDDictionaryManager: NSObject {
                 }
                 
                 let doc = HTMLDocument(string: htmlAsString)
+                var wordResult = Dictionary<String, Any>()
+                wordResult["word"] = word
                 
-                // find the table of charts in the HTML
-                let tables = doc.firstNodeMatchingSelector("#hello_1__11")
-                print(tables?.textContent)
-              
+                // Get type of word
+                var typeWords = [String]()
+                if let types = doc.firstNodeMatchingSelector(".webtop-g"){
+                    let posTags = types.nodesMatchingSelector(".pos")
+                    for posTag in posTags {
+                        typeWords.append(posTag.textContent)
+                    }
+                }
+                wordResult["typeWords"] = typeWords.joinWithSeparator(", ")
+                
+                // get pronunciation of word
+                var pronunciationDic: [String:String] = Dictionary<String, String>()
+                if let pronunciationTag = doc.firstNodeMatchingSelector(".pron-gs"){
+                    let phoneTags = pronunciationTag.nodesMatchingSelector("span .phon")
+                    if phoneTags.count == 2 {
+                        pronunciationDic["proBre"] = phoneTags[0].textContent
+                        pronunciationDic["proName"] = phoneTags[1].textContent
+                    }
+                    if let pronunciationSoundUS = pronunciationTag.firstNodeMatchingSelector(".pron-uk"){
+                        if let pronunciationSoundUSURL =  pronunciationSoundUS.objectForKeyedSubscript("data-src-mp3") as? String{
+                            pronunciationDic["proBreSound"] = pronunciationSoundUSURL
+                        }
+                    }
+                    if let pronunciationSoundUS = pronunciationTag.firstNodeMatchingSelector(".pron-us"){
+                        if let pronunciationSoundUSURL =  pronunciationSoundUS.objectForKeyedSubscript("data-src-mp3") as? String{
+                            pronunciationDic["proNameSound"] = pronunciationSoundUSURL
+                        }
+                    }
+                }
+                
+                
+                wordResult["proBre"] = pronunciationDic["proBre"]
+                wordResult["proName"] = pronunciationDic["proName"]
+                wordResult["proBreSound"] = pronunciationDic["proBreSound"]
+                wordResult["proNameSound"] = pronunciationDic["proNameSound"]
+                // get description of word
+                
+                let sngsTags = doc.nodesMatchingSelector(".sn-gs")
+                var descriptionWords = [NSDictionary]()
+                for sngsTag in sngsTags {
+                    if let sngTag = sngsTag as? HTMLElement {
+                        // fetch all sn-g tag in s-ngs
+                        for sngsElement in sngTag.children {
+                            if let sngElement = sngsElement as? HTMLElement { // TODO: should be able to combine this with loop above
+                                if let newDes = self.parseSngRow(sngElement) {
+                                    descriptionWords.append(newDes);
+                                }
+                            }
+                        }
+                    }
+                }
+                wordResult["descriptionWords"] = descriptionWords
+                
+                completionHandler(result: wordResult, error: nil)
         }
-                //                var chartsTable:HTMLElement?
-                //                for table in tables {
-                //                    if let tableElement = table as? HTMLElement {
-                //                        if self.isChartsTable(tableElement) {
-                //                            chartsTable = tableElement
-                //                            break
-                //                        }
-                //                    }
-                //                }
-                //
-                //                // make sure we found the table of charts
-                //                guard let tableContents = chartsTable else {
-                //                    // TODO: create error
-                //                    let error = Error.errorWithCode(.DataSerializationFailed, failureReason: "Could not find charts table in HTML document")
-                //                    completionHandler(error)
-                //                    return
-                //                }
-                //
-                //                self.charts = []
-                //                for row in tableContents.children {
-                //                    if let rowElement = row as? HTMLElement { // TODO: should be able to combine this with loop above
-                //                        if let newChart = self.parseHTMLRow(rowElement) {
-                //                            self.charts?.append(newChart)
-                //                        }
-                //                    }
-                //                }
-                completionHandler(result: nil, error: nil)
-        }
+        
+        completionHandler(result: nil, error: nil)
     }
     
     
@@ -88,44 +114,16 @@ class EDDictionaryManager: NSObject {
     }
     
     
-    //    private func parseHTMLRow(rowElement: HTMLElement) -> Chart? {
-    //        var url: NSURL?
-    //        var number: Int?
-    //        var scale: Int?
-    //        var title: String?
-    //        // first column: URL and number
-    //        if let firstColumn = rowElement.childAtIndex(1) as? HTMLElement {
-    //            // skip the first row, or any other where the first row doesn't contain a number
-    //            if let urlNode = firstColumn.firstNodeMatchingSelector("a") {
-    //                if let urlString = urlNode.objectForKeyedSubscript("href") as? String {
-    //                    url = NSURL(string: urlString)
-    //                }
-    //                // need to make sure it's a number
-    //                let textNumber = firstColumn.textContent.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-    //                number = Int(textNumber)
-    //            }
-    //        }
-    //        if (url == nil || number == nil) {
-    //            return nil // can't do anything without a URL, e.g., the header row
-    //        }
-    //
-    //        if let secondColumn = rowElement.childAtIndex(3) as? HTMLElement {
-    //            let text = secondColumn.textContent
-    //                .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-    //                .stringByReplacingOccurrencesOfString(",", withString: "")
-    //            scale = Int(text)
-    //        }
-    //
-    //        if let thirdColumn = rowElement.childAtIndex(5) as? HTMLElement {
-    //            title = thirdColumn.textContent
-    //                .stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
-    //                .stringByReplacingOccurrencesOfString("\n", withString: "")
-    //        }
-    //        
-    //        if let title = title, url = url, number = number, scale = scale {
-    //            return Chart(title: title, url: url, number: number, scale: scale)
-    //        }
-    //        return nil
-    //    }
+    private func parseSngRow(rowElement: HTMLElement) -> NSDictionary? {
+        var describle: [String:String] = Dictionary<String, String>()
+        describle["def"] = rowElement.firstNodeMatchingSelector(".def")?.textContent
+        describle["ex"] = rowElement.firstNodeMatchingSelector(".x-g .x")?.textContent
+        
+        return describle
+    }
+    
+}
+
+
 
 

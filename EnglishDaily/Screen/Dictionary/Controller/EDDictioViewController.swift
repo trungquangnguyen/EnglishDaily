@@ -12,10 +12,11 @@ class EDDictioViewController: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        EDDictionaryManager .sharedInstance.lookUpWord("hello") { (result, error) -> Void in
-            
-        }
-        // Do any additional setup after loading the view.
+        EDDictionaryManager.sharedInstance.lookUpWord("more") { (result, error) -> Void in
+            if((result) != nil) {
+            print(result!["descriptionWord"]);
+            }
+        }        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
