@@ -23,7 +23,7 @@ class EDDictionaryManager: NSObject {
     
     static let sharedInstance = EDDictionaryManager()
     
-    func lookUpWord(word: String,completionHandler: (result: Dictionary<String, Any>?,error: NSError?) -> Void) {
+    func lookUpWord(word: String, completionHandler: (result: EDWordModel?,error: NSError?) -> Void) {
         let URLString = "http://www.oxfordlearnersdictionaries.com/definition/english/\(word)"
         Alamofire.request(.GET, URLString)
             .responseString { responseString in
@@ -94,8 +94,8 @@ class EDDictionaryManager: NSObject {
                     }
                 }
                 wordResult["descriptionWords"] = descriptionWords
-                
-                completionHandler(result: wordResult, error: nil)
+                let model = EDWordModel(data: wordResult)
+                completionHandler(result: model, error: nil)
         }
         
         completionHandler(result: nil, error: nil)

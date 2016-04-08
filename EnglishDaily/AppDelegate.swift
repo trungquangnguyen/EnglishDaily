@@ -21,11 +21,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         homeVC.title = "HOME"
         
         let dicVC : EDDictioViewController = EDDictioViewController();
-        homeVC.title = "DIC"
+         dicVC.title = "DIC"
         
         
         let navVC : UINavigationController = UINavigationController(rootViewController: dicVC)
-        window?.rootViewController = navVC
+        window?.rootViewController = dicVC
         window?.makeKeyAndVisible()
         return true
     }

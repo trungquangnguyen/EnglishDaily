@@ -8,15 +8,15 @@
 
 import UIKit
 
-class EDDictioViewController: UIViewController {
+class EDDictioViewController: UIViewController, UISearchBarDelegate {
+    @IBOutlet weak var textView: UITextView!
+    @IBOutlet weak var searchBar: UISearchBar!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        EDDictionaryManager.sharedInstance.lookUpWord("more") { (result, error) -> Void in
-            if((result) != nil) {
-            print(result!["descriptionWord"]);
-            }
-        }        // Do any additional setup after loading the view.
+        self.searchBar.autocapitalizationType = .None;
+        searchBar.delegate = self
+        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -24,7 +24,23 @@ class EDDictioViewController: UIViewController {
         // Dispose of any resources that can be recreated.
     }
     
-
+    func searchBarTextDidEndEditing(searchBar: UISearchBar) {
+        searchWord(searchBar.text)
+    }
+    
+    func searchBarSearchButtonClicked(searchBar: UISearchBar){
+        searchBar.endEditing(true)
+        searchWord(searchBar.text)
+    }
+    
+    func searchWord(word : String?){
+        EDDictionaryManager.sharedInstance.lookUpWord(word!) { (result, error) -> Void in
+            if((result) != nil) {
+                self.textView.text = result?.createTextFromModel()
+                print(result);
+            }
+        }
+    }
     /*
     // MARK: - Navigation
 

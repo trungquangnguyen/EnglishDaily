@@ -10,6 +10,7 @@
 		107EAE3B1C93F28100A69B19 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 107EAE3A1C93F28100A69B19 /* AppDelegate.swift */; };
 		107EAE421C93F28100A69B19 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 107EAE411C93F28100A69B19 /* Assets.xcassets */; };
 		107EAE451C93F28100A69B19 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 107EAE431C93F28100A69B19 /* LaunchScreen.storyboard */; };
+		493213691CB8056100CE0679 /* EDSearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 493213681CB8056100CE0679 /* EDSearchBar.swift */; };
 		49619A641C99B04D00CAA429 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49619A621C99B04D00CAA429 /* HomeViewController.swift */; };
 		49619A651C99B04D00CAA429 /* HomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 49619A631C99B04D00CAA429 /* HomeViewController.xib */; };
 		49619A6B1C99B5A400CAA429 /* EDWordModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49619A6A1C99B5A400CAA429 /* EDWordModel.swift */; };
@@ -25,6 +26,7 @@
 		107EAE411C93F28100A69B19 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		107EAE441C93F28100A69B19 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		107EAE461C93F28100A69B19 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		493213681CB8056100CE0679 /* EDSearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EDSearchBar.swift; sourceTree = "<group>"; };
 		49619A621C99B04D00CAA429 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		49619A631C99B04D00CAA429 /* HomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = HomeViewController.xib; sourceTree = "<group>"; };
 		49619A6A1C99B5A400CAA429 /* EDWordModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EDWordModel.swift; sourceTree = "<group>"; };
@@ -142,6 +144,7 @@
 		49619A601C99ADCA00CAA429 /* View */ = {
 			isa = PBXGroup;
 			children = (
+				493213681CB8056100CE0679 /* EDSearchBar.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -297,6 +300,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				493213691CB8056100CE0679 /* EDSearchBar.swift in Sources */,
 				107EAE3B1C93F28100A69B19 /* AppDelegate.swift in Sources */,
 				49619A6B1C99B5A400CAA429 /* EDWordModel.swift in Sources */,
 				49619A641C99B04D00CAA429 /* HomeViewController.swift in Sources */,

@@ -10,17 +10,52 @@ import UIKit
 
 
 class EDWordModel: NSObject {
-    let title: String
-    let type: String
-    let urlAudioUS: NSURL
-    let urlAudioUK: NSURL
+    var title: String
+    var type: String
+    var pronunciationUS: String
+    var pronunciationUK: String
+    var urlAudioUS: NSURL
+    var urlAudioUK: NSURL
     
-    required init(data : NSDictionary) {
-        self.title = (data[""]?.string)!
-        self.urlAudioUK = NSURL(string: (data[""]?.string)!)!
-        self.urlAudioUS = NSURL(string: (data[""]?.string)!)!
+    required init(data : Dictionary<String, Any>?) {
+        self.title = ""
+        self.type = ""
+        self.pronunciationUS = ""
+        self.pronunciationUK = ""
+        self.type = ""
+        self.type = ""
+        if let word = data!["word"] as? String {
+            self.title = word
+        }
+        
+        if let typeWords = data!["typeWords"] as? String {
+            self.type = typeWords
+        }
+        
+        if let proBre = data!["proBre"] as? String {
+            self.pronunciationUS = proBre
+        }
+        
+        if let proName = data!["proName"] as? String {
+            self.pronunciationUK = proName
+        }
+//        
+//        if var proBreSound = data!["proBreSound"] as? String {
+//            self.pronunciationUK = NSURL(fileURLWithPath: proBreSound, relativeToURL: nil)
+//        }
+//
+//        if var proName = data!["proName"] as? String {
+//            self.pronunciationUK = proName
+//        }
+        self.urlAudioUK = NSURL(string: "123")!
+        self.urlAudioUS = NSURL(string: "123")!
         //        self.number = number
         //        self.scale = scale
-        self.type = ""
+        
     }
+    
+    func createTextFromModel()->String{
+        return "\(title)\n\(type)\n\(pronunciationUK)\(pronunciationUS)";
+    }
+    
 }
